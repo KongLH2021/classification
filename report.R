@@ -172,29 +172,28 @@ lrn_ranger$predict(hotels_task, row_ids = test_set)
 res_ranger <- resample(hotels_task, lrn_xgboost, cv5, store_models = TRUE)
 res_ranger$aggregate()
 
-'
+
 #source from https://zhuanlan.zhihu.com/p/441604607
 search_space = ps(
-  mtry = p_int(lower = 1, upper = 16),
+  mtry = p_int(lower = 1, upper = 10),
   num.trees = p_int(lower = 500, upper = 1000),
   min.node.size = p_int(lower = 2, upper = 10))
 
 at = auto_tuner(
   learner = lrn_ranger,
-  resampling = rsmp("cv", folds = 3),
-  measure = msr("classif.auc"),
+  resampling = rsmp("holdout"),
+  measure = msr("classif.ce"),
   search_space = search_space,
   method = "random_search",
-  term_evals = 5)
+  term_evals = 10)
 
 at$train(hotels_task, row_ids = validate_set)
 
 lrn_ranger$param_set$values = at$tuning_result$learner_param_vals[[1]]
 lrn_ranger$train(hotels_task, row_ids = train_set)
-lrn_ranger$predict(hotels_task, row_ids = test_set)
-res_ranger <- resample(hotels_task, lrn_xgboost, cv5, store_models = TRUE)
-res_ranger$aggregate()
-'
+prediction <- lrn_ranger$predict(hotels_task, row_ids = test_set)
+prediction$score(msr("classif.ce"))
+
 
 res <- benchmark(data.table(
   task       = list(hotels_task),
