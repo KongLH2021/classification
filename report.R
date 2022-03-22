@@ -148,7 +148,7 @@ rpart::plotcp(res_cart$learners[[5]]$model)
 res_cart$aggregate()
 
 # when cp = 0, the classif.ce gets the smallest value 0.1997655 
-lrn_cart_cp  <- lrn("classif.rpart", predict_type = "prob", cp = 0.01, id = "cartcp")
+lrn_cart_cp  <- lrn("classif.rpart", predict_type = "prob", cp = 0.014, id = "cartcp")
 lrn_cart_cp$train(hotels_task, row_ids = train_set)
 pred_cart_cp = lrn_cart_cp$predict(hotels_task, row_ids = test_set)
 lrn_cart_cp$predict(hotels_task, row_ids = test_set)
@@ -223,12 +223,6 @@ library("mlr3verse")
 library("tidyverse")
 
 # base learners
-lrn_log_reg  <- lrn("classif.log_reg", predict_type = "prob")
-lrn_baseline <- lrn("classif.featureless", predict_type = "prob")
-lrn_cart     <- lrn("classif.rpart", predict_type = "prob")
-lrn_xgboost  <- lrn("classif.xgboost", predict_type = "prob")
-lrn_ranger   <- lrn("classif.ranger", predict_type = "prob")
-lrn_cart_cp  <- lrn("classif.rpart", predict_type = "prob", cp = 0, id = "cartcp")
 
 # super learner
 super_logreg <- lrn("classif.log_reg", predict_type = "prob", id = "super")
