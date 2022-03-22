@@ -254,6 +254,7 @@ super_lrn <- gunion(list(
 
 
 # Finally fit the base learners and super learner and evaluate
+# this part will take about 20 minutes
 res_spr <- resample(hotels_task, super_lrn, cv5, store_models = TRUE)
 res_spr$aggregate(list(msr("classif.ce"),
                        msr("classif.acc"),
